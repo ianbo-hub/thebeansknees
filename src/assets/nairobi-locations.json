@@ -1,0 +1,59 @@
+{
+  "Westlands": [
+    "Kitisuru", "Parklands/Highridge", "Karura", "Mountain View",
+    "Kangemi", "Highridge", "Nyari"
+  ],
+  "Dagoretti North": [
+    "Kilimani", "Kawangware", "Gatina", "Kileleshwa", "Kabiro"
+  ],
+  "Dagoretti South": [
+    "Uthiru", "Ruthimitu", "Mutu-ini", "Ngando", "Riruta",
+    "Woodley/Kenyatta Golf Course"
+  ],
+  "Langata": [
+    "Karen", "Nairobi West", "Mugumo-ini", "South C", "Nyayo Highrise"
+  ],
+  "Kibra": [
+    "Makina", "Lindi", "Laini Saba", "Kambi Muiru", "Soweto East"
+  ],
+  "Roysambu": [
+    "Githurai", "Kahawa West", "Zimmerman", "Roysambu",
+    "Lucky Summer", "Kahawa"
+  ],
+  "Kasarani": [
+    "Clay City", "Mwiki", "Kasarani", "Njiru", "Ruai"
+  ],
+  "Ruaraka": [
+    "Baba Dogo", "Utalii", "Mathare North", "Lucky Summer", "Korogocho"
+  ],
+  "Embakasi South": [
+    "Imara Daima", "Kwa Njenga", "Kwa Reuben", "Pipeline", "Mowlem"
+  ],
+  "Embakasi North": [
+    "Kariobangi North", "Dandora Area I", "Dandora Area II",
+    "Dandora Area III", "Dandora Area IV"
+  ],
+  "Embakasi Central": [
+    "Kayole North", "Kayole Central", "Kayole South",
+    "Komarock", "Matopeni/Spring Valley"
+  ],
+  "Embakasi East": [
+    "Upper Savanna", "Lower Savanna", "Chokoaa", "Mihango", "Utawala"
+  ],
+  "Embakasi West": [
+    "Umoja I", "Umoja II", "Mowlem", "Kariobangi South"
+  ],
+  "Makadara": [
+    "Maringo/Hamza", "Viwandani", "Harambee", "Makongeni"
+  ],
+  "Kamukunji": [
+    "Pumwani", "Eastleigh North", "Eastleigh South", "Airbase", "California"
+  ],
+  "Starehe": [
+    "Nairobi Central", "Ngara", "Pangani", "Ziwani/Kariokor",
+    "Landimawe", "Nairobi South"
+  ],
+  "Mathare": [
+    "Hospital", "Mabatini", "Huruma", "Ngei", "Mlango Kubwa", "Kiamaiko"
+  ]
+}

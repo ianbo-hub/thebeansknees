@@ -1,0 +1,45 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+# ── SPA rewrite (React Router) ───────────────────────────────────────────────
+[[redirects]]
+  from = "/api/*"
+  to   = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to   = "/index.html"
+  status = 200
+
+# ── Asset cache (immutable, hashed filenames) ─────────────────────────────────
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ── Global security headers ───────────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Prevent framing / clickjacking
+    X-Frame-Options        = "DENY"
+    # Prevent MIME-type sniffing
+    X-Content-Type-Options = "nosniff"
+    # Referrer leakage control
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    # Disable browser features we don't use
+    Permissions-Policy     = "camera=(), microphone=(), geolocation=()"
+    # Force HTTPS (2-year max-age; omit includeSubDomains for Netlify shared TLS)
+    Strict-Transport-Security = "max-age=63072000; preload"
+
+    # ── Content-Security-Policy ──────────────────────────────────────────────
+    # Fonts:     fonts.googleapis.com + fonts.gstatic.com (Google Fonts CDN)
+    # Images:    res.cloudinary.com (Cloudinary delivery) + self
+    # Connect:   *.netlify.app self (API calls to Netlify Functions)
+    # Frame:     none (DENY above duplicates, belt-and-suspenders)
+    # Script:    self only — no inline scripts except 'unsafe-inline' removed;
+    #            Vite bundles everything, no inline scripts needed.
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://res.cloudinary.com https://www.dolce-gusto.co.uk; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"

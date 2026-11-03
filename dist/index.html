@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+  style="color-scheme: light" on <html> locks the browser's native UI
+  (scrollbars, date pickers, select dropdowns) to light mode before ANY
+  CSS or JS has loaded. Combined with :root { color-scheme: light } in
+  index.css and darkMode: false in tailwind.config.js, the site is
+  completely immune to OS dark-mode preferences.
+-->
+<html lang="en" style="color-scheme: light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Tells Chrome / Safari which colour scheme to use for the browser chrome -->
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#FDFAF5" />
+
+    <!-- Primary Meta -->
+    <title>The Beans Knees — Nescafé Dolce Gusto in Nairobi</title>
+    <meta name="description" content="Nairobi's home for Nescafé Dolce Gusto machines and pods. Shop the Mini Me, Infinissima, and Classic — plus 6 pod flavours. WhatsApp to order, delivered to your door." />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://thebeansknees.netlify.app" />
+    <meta property="og:title"       content="The Beans Knees — Dolce Gusto Nairobi" />
+    <meta property="og:description" content="Shop Nescafé Dolce Gusto machines and pods. WhatsApp ordering, Nairobi delivery." />
+    <meta property="og:image"       content="https://thebeansknees.netlify.app/og-image.jpg" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google Fonts — preconnect first, then load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/assets/index-DCB8x_OZ.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-BrVfq_k5.js">
+    <link rel="modulepreload" crossorigin href="/assets/lenis-CtomfwWB.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-B0tCgKDu.js">
+    <link rel="modulepreload" crossorigin href="/assets/gsap-KjMiU8xZ.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-BZ2m3j9l.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
