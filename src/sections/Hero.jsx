@@ -11,12 +11,11 @@ export default function Hero() {
   const subRef      = useRef(null)
   const ctaRef      = useRef(null)
   const scrollRef   = useRef(null)
-  const bgRef       = useRef(null)
+  const videoRef    = useRef(null)
 
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) {
-      // Just show everything without animation
       ;[headlineRef, subRef, ctaRef, scrollRef].forEach(r => {
         if (r.current) r.current.style.opacity = '1'
       })
@@ -30,21 +29,6 @@ export default function Hero() {
         .fromTo(subRef.current,      { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.9 }, 0.3)
         .fromTo(ctaRef.current,      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7 }, 0.6)
         .fromTo(scrollRef.current,   { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.6 }, 1.0)
-
-      // Parallax on scroll — bg moves slower than viewport
-      if (bgRef.current) {
-        gsap.to(bgRef.current, {
-          yPercent: 30,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: bgRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        })
-      }
-
     })
 
     return () => ctx.revert()
@@ -56,23 +40,38 @@ export default function Hero() {
       className="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden"
       aria-label="Hero — The Beans Knees"
     >
-      {/* Background — warm cream gradient with subtle radial warmth */}
+      {/* Video background */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      >
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
+
+      {/* Dark gradient overlay — keeps text readable over the video */}
       <div
-        ref={bgRef}
-        className="absolute inset-0 -bottom-[30%]"
+        className="absolute inset-0 z-[1]"
         style={{
           background: `
-            radial-gradient(ellipse 80% 60% at 50% 70%, rgba(200,135,62,0.12) 0%, transparent 70%),
-            radial-gradient(ellipse 60% 40% at 20% 30%, rgba(196,154,108,0.08) 0%, transparent 60%),
-            linear-gradient(180deg, #F4EAD8 0%, #E8D9C0 60%, #D9C7A8 100%)
+            linear-gradient(180deg,
+              rgba(26,14,5,0.55) 0%,
+              rgba(26,14,5,0.35) 50%,
+              rgba(26,14,5,0.65) 100%
+            )
           `,
         }}
         aria-hidden="true"
       />
 
       {/* Decorative circles */}
-      <div className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full border border-amber-brand/10 pointer-events-none" aria-hidden="true" />
-      <div className="absolute bottom-1/3 left-1/5 w-96 h-96 rounded-full border border-brown-300/8 pointer-events-none" aria-hidden="true" />
+      <div className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full border border-white/8 pointer-events-none z-[2]" aria-hidden="true" />
+      <div className="absolute bottom-1/3 left-1/5 w-96 h-96 rounded-full border border-white/5 pointer-events-none z-[2]" aria-hidden="true" />
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
@@ -88,7 +87,7 @@ export default function Hero() {
         {/* Headline */}
         <h1
           ref={headlineRef}
-          className="font-display text-[clamp(3.5rem,10vw,8rem)] leading-[0.95] text-brown-900 mb-6"
+          className="font-display text-[clamp(3.5rem,10vw,8rem)] leading-[0.95] text-cream-50 mb-6"
           style={{ opacity: 0 }}
         >
           Life's too short<br />
@@ -100,7 +99,7 @@ export default function Hero() {
         {/* Subtitle */}
         <p
           ref={subRef}
-          className="font-body text-[clamp(1.1rem,2.5vw,1.4rem)] text-brown-400 leading-relaxed max-w-xl mx-auto mb-10"
+          className="font-body text-[clamp(1.1rem,2.5vw,1.4rem)] text-cream-50/80 leading-relaxed max-w-xl mx-auto mb-10"
           style={{ opacity: 0 }}
         >
           Shop Nescafé Dolce Gusto machines and pods in Nairobi.
@@ -131,7 +130,7 @@ export default function Hero() {
           <a
             href="#pods"
             className="flex items-center gap-2 px-7 py-3.5 rounded-full
-              border border-brown-200 text-brown-600 font-ui font-medium
+              border border-white/30 text-cream-50 font-ui font-medium
               hover:border-amber-brand hover:text-amber-brand
               active:scale-[0.98]
               transition-all duration-300 ease-spring"
@@ -155,12 +154,12 @@ export default function Hero() {
       {/* Scroll indicator */}
       <div
         ref={scrollRef}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
         style={{ opacity: 0 }}
         aria-hidden="true"
       >
-        <span className="font-ui text-[10px] uppercase tracking-widest text-brown-300">Scroll</span>
-        <div className="w-[1px] h-10 bg-gradient-to-b from-brown-300 to-transparent" />
+        <span className="font-ui text-[10px] uppercase tracking-widest text-cream-50/50">Scroll</span>
+        <div className="w-[1px] h-10 bg-gradient-to-b from-cream-50/30 to-transparent" />
       </div>
     </section>
   )
