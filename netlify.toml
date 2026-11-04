@@ -42,4 +42,4 @@
     # Frame:     none (DENY above duplicates, belt-and-suspenders)
     # Script:    self only — no inline scripts except 'unsafe-inline' removed;
     #            Vite bundles everything, no inline scripts needed.
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://res.cloudinary.com https://www.dolce-gusto.co.uk; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://res.cloudinary.com https://www.dolce-gusto.co.uk https://static01.galaxus.com https://www.kontrolsat.com; connect-src 'self'; media-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
