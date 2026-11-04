@@ -1,15 +1,10 @@
 /**
- * upload-images.mjs
- * Uploads all product images to Cloudinary for The Beans Knees.
- *
- * Run once from your laptop (not in Netlify — it needs outbound access to api.cloudinary.com):
- *   node scripts/upload-images.mjs
- *
- * After running, uncomment the cloudinary_id lines in src/features/products/fallback.js
- * and add cloudinary_id values to your Google Sheet (machines tab).
+ * upload-images.mjs  — fixed for hotlink-protected sources
+ * Downloads each image locally first, then uploads the bytes to Cloudinary.
+ * Run: node scripts/upload-images.mjs
  */
-
 import crypto from 'node:crypto'
+// FormData and Blob are globals in Node 18+ — no import needed
 
 const CLOUD      = 'sxyb8iya'
 const API_KEY    = '848473338416528'
@@ -17,7 +12,7 @@ const API_SECRET = 'uiYuBxWYZ9xqxE9DSbqG8BXWJbM'
 const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`
 
 const IMAGES = {
-  // ── Machines ────────────────────────────────────────────────────────────────
+  // ── Machines ──────────────────────────────────────────────────────────────
   'thebeansknees/machines/mini-me':
     'https://www.dolce-gusto.co.uk/media/catalog/product/cache/a7ed62b12c9d28aa0842b5a9bc7623a5/m/a/mac0000123-1_gallery1q.png',
 
@@ -27,7 +22,7 @@ const IMAGES = {
   'thebeansknees/machines/classic':
     'https://www.kontrolsat.com/99614-large_default/semi-automatic-coffee-machine-krups-dolce-gusto-kp830110.webp',
 
-  // ── Pods ─────────────────────────────────────────────────────────────────────
+  // ── Pods ──────────────────────────────────────────────────────────────────
   'thebeansknees/pods/americano':
     'https://www.dolce-gusto.co.uk/media/catalog/product/cache/b26f94d0ac1c29a8cd5e375995cfb68d/b/e/bev0000001_16x_heroimage2026.png',
 
@@ -47,47 +42,60 @@ const IMAGES = {
     'https://www.dolce-gusto.co.uk/media/catalog/product/cache/b26f94d0ac1c29a8cd5e375995cfb68d/7/6/7613036989268_H__g-1_q-1_c-12_m-0.png',
 }
 
-const SKIP_FROM_SIG = new Set(['file', 'api_key', 'resource_type', 'cloud_name'])
+const SKIP = new Set(['api_key', 'resource_type', 'cloud_name'])
 
 function sign(params) {
-  // Sort all signable params alphabetically, append secret, SHA-1
   const str = Object.entries(params)
-    .filter(([k]) => !SKIP_FROM_SIG.has(k))
+    .filter(([k]) => !SKIP.has(k))
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([k, v]) => `${k}=${v}`)
     .join('&') + API_SECRET
   return crypto.createHash('sha1').update(str).digest('hex')
 }
 
-async function upload(publicId, sourceUrl) {
-  const timestamp = Math.floor(Date.now() / 1000)
+async function downloadImage(url) {
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Referer': 'https://www.dolce-gusto.co.uk/',
+    },
+  })
+  if (!res.ok) throw new Error(`Download failed: ${res.status} ${res.statusText}`)
+  const buf = await res.arrayBuffer()
+  const contentType = res.headers.get('content-type') || 'image/png'
+  return { buf, contentType }
+}
 
-  const params = {
-    public_id: publicId,
-    timestamp: String(timestamp),
-    overwrite: 'true',
+async function upload(publicId, sourceUrl) {
+  // Step 1: download image bytes locally
+  let imageData
+  try {
+    imageData = await downloadImage(sourceUrl)
+  } catch (e) {
+    throw new Error(`Download error: ${e.message}`)
   }
+
+  // Step 2: build signed params
+  const timestamp = String(Math.floor(Date.now() / 1000))
+  const params = { public_id: publicId, timestamp, overwrite: 'true' }
   const signature = sign(params)
 
-  const body = new URLSearchParams({
-    file: sourceUrl,
-    api_key: API_KEY,
-    signature,
-    ...params,
-  })
+  // Step 3: upload as multipart file
+  const form = new FormData()
+  form.append('api_key',   API_KEY)
+  form.append('signature', signature)
+  for (const [k, v] of Object.entries(params)) form.append(k, v)
 
-  const res = await fetch(UPLOAD_URL, { method: 'POST', body })
+  const ext = sourceUrl.split('.').pop().split('?')[0] || 'png'
+  form.append('file', new Blob([imageData.buf], { type: imageData.contentType }), `image.${ext}`)
+
+  const res = await fetch(UPLOAD_URL, { method: 'POST', body: form })
   const data = await res.json()
 
-  if (res.ok) {
-    console.log(`  ✓ ${publicId}`)
-    console.log(`    → ${data.secure_url}`)
-    return true
-  } else {
-    console.error(`  ✗ ${publicId}`)
-    console.error(`    Error: ${data.error?.message ?? JSON.stringify(data)}`)
-    return false
-  }
+  if (!res.ok) throw new Error(data.error?.message ?? JSON.stringify(data))
+  return data.secure_url
 }
 
 console.log('Uploading product images to Cloudinary…\n')
@@ -95,18 +103,21 @@ console.log('Uploading product images to Cloudinary…\n')
 let ok = 0, fail = 0
 for (const [publicId, url] of Object.entries(IMAGES)) {
   process.stdout.write(`→ ${publicId}\n`)
-  const success = await upload(publicId, url)
-  success ? ok++ : fail++
+  try {
+    const secureUrl = await upload(publicId, url)
+    console.log(`  ✓ uploaded`)
+    console.log(`    ${secureUrl}\n`)
+    ok++
+  } catch (e) {
+    console.log(`  ✗ ${e.message}\n`)
+    fail++
+  }
 }
 
-console.log(`\nDone — ${ok} uploaded, ${fail} failed.`)
-if (ok > 0) {
-  console.log(`
-Next steps:
-  1. In src/features/products/fallback.js:
-     Uncomment the cloudinary_id lines for each machine (and remove source_image_url).
-  2. In your Google Sheet (machines tab):
-     Add a 'cloudinary_id' column with values like thebeansknees/machines/mini-me
-  3. Commit + push → Netlify redeploys.
-`)
+console.log(`Done — ${ok} uploaded, ${fail} failed.`)
+if (ok === Object.keys(IMAGES).length) {
+  console.log('\nAll images uploaded! Now update fallback.js:')
+  console.log('  - Uncomment cloudinary_id lines for all 3 machines')
+  console.log('  - Remove the source_image_url lines')
+  console.log('  - Push to GitHub')
 }

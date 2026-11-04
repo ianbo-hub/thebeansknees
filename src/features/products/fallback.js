@@ -7,9 +7,7 @@ export const FALLBACK_MACHINES = [
   {
     id: 'mini-me', name: 'Mini Me', tagline: 'Compact powerhouse for small spaces',
     price_kes: null, status: 'in_stock',
-    // cloudinary_id set once images are uploaded (run scripts/upload-images.mjs)
-    // cloudinary_id: 'thebeansknees/machines/mini-me',
-    source_image_url: 'https://www.dolce-gusto.co.uk/media/catalog/product/cache/a7ed62b12c9d28aa0842b5a9bc7623a5/m/a/mac0000123-1_gallery1q.png',
+    cloudinary_id: 'thebeansknees/machines/mini-me',
     bar_pressure: '15 bar', tank_litres: '0.8 L', wattage: '1460 W',
     dimensions_cm: '20 × 16 × 29 cm', colour_options: 'Black',
     notes: 'Adjustable cup stand; hot & cold drinks; auto-off after 5 min',
@@ -18,8 +16,7 @@ export const FALLBACK_MACHINES = [
   {
     id: 'infinissima', name: 'Infinissima', tagline: 'Sleek touch-screen elegance',
     price_kes: null, status: 'in_stock',
-    // cloudinary_id: 'thebeansknees/machines/infinissima',
-    source_image_url: 'https://static01.galaxus.com/productimages/7/6/3/6/9/2/3/4/7/0/6/2/3/5/1/9/8/1/0/1b47c5d3-e4d9-4669-92a3-7e44f67646ef_cropped.jpg_720.jpeg',
+    cloudinary_id: 'thebeansknees/machines/infinissima',
     bar_pressure: '15 bar', tank_litres: '1.2 L', wattage: '1500 W',
     dimensions_cm: '24 × 16 × 31 cm', colour_options: 'Black',
     notes: 'Touch-screen controls; large water tank; latte art capability',
@@ -28,8 +25,7 @@ export const FALLBACK_MACHINES = [
   {
     id: 'classic', name: 'Classic (by Krups)', tagline: 'The original. Bold. Reliable.',
     price_kes: null, status: 'in_stock',
-    // cloudinary_id: 'thebeansknees/machines/classic',
-    source_image_url: 'https://www.kontrolsat.com/99614-large_default/semi-automatic-coffee-machine-krups-dolce-gusto-kp830110.webp',
+    cloudinary_id: 'thebeansknees/machines/classic',
     bar_pressure: '15 bar', tank_litres: '1.0 L', wattage: '1500 W',
     dimensions_cm: '25 × 16 × 30 cm', colour_options: 'Black',
     notes: 'Manual stop lever; starter-style; classic Dolce Gusto design',
