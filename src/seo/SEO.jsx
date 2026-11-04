@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { SITE_URL, SITE_NAME } from '../shared/lib/constants'
 
@@ -30,6 +31,18 @@ export default function SEO({ title, description, path = '' }) {
     'Shop Nescafé Dolce Gusto coffee machines and pods in Nairobi. Mini Me, Infinissima, Classic + 6 pod flavours. WhatsApp to order, delivered to your door.'
   const url  = `${SITE_URL}${path}`
 
+  // Inject Store JSON-LD directly — react-helmet-async does not reliably
+  // inject <script> tags in React 18; useEffect + direct DOM write works.
+  useEffect(() => {
+    document.getElementById('tbk-store-schema')?.remove()
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.id   = 'tbk-store-schema'
+    script.text = JSON.stringify(JSON_LD_LOCAL_BUSINESS)
+    document.head.appendChild(script)
+    return () => { document.getElementById('tbk-store-schema')?.remove() }
+  }, [])
+
   return (
     <Helmet>
       <title>{fullTitle}</title>
@@ -47,11 +60,6 @@ export default function SEO({ title, description, path = '' }) {
       <meta name="twitter:card"        content="summary_large_image" />
       <meta name="twitter:title"       content={fullTitle} />
       <meta name="twitter:description" content={desc} />
-
-      {/* JSON-LD */}
-      <script type="application/ld+json">
-        {JSON.stringify(JSON_LD_LOCAL_BUSINESS)}
-      </script>
     </Helmet>
   )
 }
