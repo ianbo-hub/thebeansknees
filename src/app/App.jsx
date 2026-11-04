@@ -9,6 +9,7 @@ import Footer from '../shared/components/layout/Footer'
 import CartDrawer from '../shared/components/ui/CartDrawer'
 import PrivacyPolicy from '../pages/PrivacyPolicy'
 import CookiePolicy from '../pages/CookiePolicy'
+import NotFound from '../pages/NotFound'
 import HomePage from './HomePage'
 
 export default function App() {
@@ -26,8 +27,8 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
-            {/* Catch-all — redirect unknown paths to home */}
-            <Route path="*" element={<HomePage />} />
+            {/* Catch-all — 404 for unknown paths */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
 
           <Footer />

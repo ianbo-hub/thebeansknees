@@ -1,4 +1,5 @@
 import SEO from '../seo/SEO'
+import ProductSchema from '../seo/ProductSchema'
 import Hero from '../sections/Hero'
 import MachinesSection from '../sections/MachinesSection'
 import PodsSection from '../sections/PodsSection'
@@ -18,6 +19,13 @@ export default function HomePage() {
   return (
     <>
       <SEO />
+      {/* Product-level JSON-LD — only rendered once data is available */}
+      {!loading && (
+        <ProductSchema
+          machines={data?.machines ?? []}
+          pods={data?.pods ?? []}
+        />
+      )}
       <main id="main-content">
         <Hero />
         <MachinesSection
