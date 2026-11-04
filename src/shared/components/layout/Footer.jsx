@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom'
-
 export default function Footer() {
   const year = new Date().getFullYear()
 
@@ -73,20 +71,20 @@ export default function Footer() {
               ))}
               {/* Legal links */}
               <li>
-                <Link
-                  to="/privacy-policy"
+                <a
+                  href="/privacy-policy.html"
                   className="font-ui text-sm text-cream-200/60 hover:text-cream-50 transition-colors"
                 >
                   Privacy Policy
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  to="/cookie-policy"
+                <a
+                  href="/terms.html"
                   className="font-ui text-sm text-cream-200/60 hover:text-cream-50 transition-colors"
                 >
-                  Cookie Policy
-                </Link>
+                  Terms &amp; Conditions
+                </a>
               </li>
             </ul>
             <div className="mt-6">

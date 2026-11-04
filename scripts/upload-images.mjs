@@ -1,14 +1,28 @@
 /**
  * upload-images.mjs  — fixed for hotlink-protected sources
  * Downloads each image locally first, then uploads the bytes to Cloudinary.
- * Run: node scripts/upload-images.mjs
+ *
+ * Setup: create a .env.cloudinary file in the project root with:
+ *   CLOUDINARY_CLOUD=sxyb8iya
+ *   CLOUDINARY_API_KEY=your_api_key
+ *   CLOUDINARY_API_SECRET=your_api_secret
+ *
+ * Run (Node 20.6+):
+ *   node --env-file=.env.cloudinary scripts/upload-images.mjs
  */
 import crypto from 'node:crypto'
 // FormData and Blob are globals in Node 18+ — no import needed
 
-const CLOUD      = 'sxyb8iya'
-const API_KEY    = '848473338416528'
-const API_SECRET = 'uiYuBxWYZ9xqxE9DSbqG8BXWJbM'
+const CLOUD      = process.env.CLOUDINARY_CLOUD
+const API_KEY    = process.env.CLOUDINARY_API_KEY
+const API_SECRET = process.env.CLOUDINARY_API_SECRET
+
+if (!CLOUD || !API_KEY || !API_SECRET) {
+  console.error('Missing Cloudinary env vars. Create .env.cloudinary and run:')
+  console.error('  node --env-file=.env.cloudinary scripts/upload-images.mjs')
+  process.exit(1)
+}
+
 const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`
 
 const IMAGES = {
